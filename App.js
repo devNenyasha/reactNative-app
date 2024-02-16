@@ -4,9 +4,15 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Linking } f
 export default function ToDoScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [amount, setAmount] = useState('');
+  const [showZesaForm, setShowZesaForm] = useState(false);
+  const [meterNumber, setMeterNumber] = useState('');
 
   const handlePhoneNumberChange = (text) => {
     setPhoneNumber(text);
+  };
+
+  const handleMeterNumberChange = (text) => {
+    setMeterNumber(text);
   };
 
   const handleAmountChange = (text) => {
@@ -39,21 +45,36 @@ export default function ToDoScreen() {
     Linking.openURL(smsUrl);
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.heading}>JUSAMUSHA</Text>
-        <Text>Who are you sending top-up to?</Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Buy Airtime</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Buy Zesa</Text>
-          </TouchableOpacity>
-        </View>
+  const handleBuyAirtime = () => {
+    setShowZesaForm(false);
+  };
 
-        {/* form */}
+  const handleBuyZesa = () => {
+    setShowZesaForm(true);
+  };
+
+  const renderForm = () => {
+    if (showZesaForm) {
+      return (
+        <View style={styles.inputContainer}>
+          <TextInput 
+            style={styles.input} 
+            placeholder="Enter Zesa Meter Number" 
+            keyboardType="numeric"
+            value={meterNumber}
+            onChangeText={handleMeterNumberChange}
+          />
+          <TextInput 
+            style={styles.input}
+            placeholder="Enter Amount"
+            keyboardType='numeric'
+            value={amount}
+            onChangeText={handleAmountChange}
+          />
+        </View>
+      );
+    } else {
+      return (
         <View style={styles.inputContainer}>
           <TextInput 
             style={styles.input} 
@@ -67,17 +88,34 @@ export default function ToDoScreen() {
             style={styles.input}
             placeholder="Enter Amount"
             keyboardType='numeric'
-            value={amount} 
+            value={amount}
             onChangeText={handleAmountChange}
           />
         </View>
+      );
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.heading}>JUSAMUSHA</Text>
+        <Text>Who are you sending top-up to?</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleBuyAirtime}>
+            <Text style={styles.buttonText}>Buy Airtime</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleBuyZesa}>
+            <Text style={styles.buttonText}>Buy Zesa</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* form */}
+        {renderForm()}
+
+        {/* start button */}
         <TouchableOpacity style={styles.startButton} onPress={handleSubmit}>
-          <Text 
-            title='Submit'
-            style={styles.buttonText}
-          >
-            START TOP-UP
-          </Text>
+          <Text style={styles.buttonText}>START TOP-UP</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -92,7 +130,7 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     paddingTop: 50,
-  }, 
+  },
   heading: {
     fontSize: 30,
     fontWeight: '600',
