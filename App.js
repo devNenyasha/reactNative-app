@@ -1,28 +1,85 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
-import Navbar from './components/Navbar';
-const ToDoScreen = () => {
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Linking } from 'react-native';
+
+export default function ToDoScreen() {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [amount, setAmount] = useState('');
+
+  const handlePhoneNumberChange = (text) => {
+    setPhoneNumber(text);
+  };
+
+  const handleAmountChange = (text) => {
+    setAmount(text);
+  };
+
+  const handleSubmit = () => {
+    if (!phoneNumber) {
+      Alert.alert('This field is required', 'Please enter phone number');
+      return;
+    }
+
+    if (!amount) {
+      Alert.alert('This field is required', 'Please enter amount');
+      return;
+    }
+
+    if (isNaN(amount) || amount % 10 !== 0) {
+      Alert.alert('Invalid amount', 'Amount must be a multiple of 10');
+      return;
+    }
+
+    // Construct the message
+    const message = `SEND ${amount} TO  ${phoneNumber}`;
+
+    // Generate the SMS URL
+    const smsUrl = `sms:45776?body=${encodeURIComponent(message)}`;
+
+    // Open the SMS URL
+    Linking.openURL(smsUrl);
+  };
+
   return (
-    
     <View style={styles.container}>
-      <Navbar />
-      <Text style={styles.heading}>JUSAMUSHA</Text>
-      <Text>Who are you sending top-up to?</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Buy Airtime</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Buy Zesa</Text>
+      <View style={styles.content}>
+        <Text style={styles.heading}>JUSAMUSHA</Text>
+        <Text>Who are you sending top-up to?</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Buy Airtime</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Buy Zesa</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* form */}
+        <View style={styles.inputContainer}>
+          <TextInput 
+            style={styles.input} 
+            placeholder="Enter Phone Number" 
+            keyboardType="numeric"
+            maxLength={10}
+            value={phoneNumber}
+            onChangeText={handlePhoneNumberChange}
+          />
+          <TextInput 
+            style={styles.input}
+            placeholder="Enter Amount"
+            keyboardType='numeric'
+            value={amount} 
+            onChangeText={handleAmountChange}
+          />
+        </View>
+        <TouchableOpacity style={styles.startButton} onPress={handleSubmit}>
+          <Text 
+            title='Submit'
+            style={styles.buttonText}
+          >
+            START TOP-UP
+          </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Enter Phone Number" />
-        <TextInput style={styles.input} placeholder="Enter Amount" />
-      </View>
-      <TouchableOpacity style={styles.startButton}>
-        <Text style={styles.buttonText}>START TOP-UP</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -31,9 +88,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  content: {
     alignItems: 'center',
     paddingTop: 50,
-  },
+  }, 
   heading: {
     fontSize: 30,
     fontWeight: '600',
@@ -43,7 +102,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    backgroundColor: '#1E1A3C',
+    backgroundColor: '#FF7400',
     borderRadius: 20,
     padding: 10,
     marginHorizontal: 10,
@@ -64,11 +123,9 @@ const styles = StyleSheet.create({
     width: 200,
   },
   startButton: {
-    backgroundColor: '#1E1A3C',
+    backgroundColor: '#FF7400',
     borderRadius: 20,
     padding: 10,
     marginVertical: 20,
   },
 });
-
-export default ToDoScreen;
