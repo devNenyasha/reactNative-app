@@ -20,10 +20,18 @@ export default function ToDoScreen() {
   };
 
   const handleSubmit = () => {
+
+    if (showZesaForm) {
+      if (!meterNumber || !/^\d{9,13}$/.test(meterNumber)) {
+        Alert.alert('Invalid meter number', 'Please enter a valid Zesa meter number with 9 to 13 digits');
+        return;
+      }
+    } else {
     if (!phoneNumber) {
       Alert.alert('This field is required', 'Please enter phone number');
       return;
     }
+  }
 
     if (!amount) {
       Alert.alert('This field is required', 'Please enter amount');
@@ -34,7 +42,6 @@ export default function ToDoScreen() {
       Alert.alert('Invalid amount', 'Amount must be a multiple of 10');
       return;
     }
-
     // Construct the message
     const message = `SEND ${amount} TO  ${phoneNumber}`;
 
@@ -61,7 +68,9 @@ export default function ToDoScreen() {
             style={styles.input} 
             placeholder="Enter Zesa Meter Number" 
             keyboardType="numeric"
+            pattern="^\d{9,13}$"
             value={meterNumber}
+            title="Please enter a meter number with 9 to 13 digits."
             onChangeText={handleMeterNumberChange}
           />
           <TextInput 
@@ -80,7 +89,6 @@ export default function ToDoScreen() {
             style={styles.input} 
             placeholder="Enter Phone Number" 
             keyboardType="numeric"
-            maxLength={10}
             value={phoneNumber}
             onChangeText={handlePhoneNumberChange}
           />
