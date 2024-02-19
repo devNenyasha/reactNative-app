@@ -1,61 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Linking } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import BuyAirtimeForm from './components/BuyAirtimeForm';
+import BuyZesaForm from './components/BuyZesaForm';
+
 
 export default function ToDoScreen() {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [amount, setAmount] = useState('');
   const [showZesaForm, setShowZesaForm] = useState(false);
-  const [meterNumber, setMeterNumber] = useState('');
-
-  const handlePhoneNumberChange = (text) => {
-    setPhoneNumber(text);
-  };
-
-  const handleMeterNumberChange = (text) => {
-    setMeterNumber(text);
-  };
-
-  const handleAmountChange = (text) => {
-    setAmount(text);
-  };
-
-  const handleSubmit = () => {
-
-    if (showZesaForm) {
-      if (!meterNumber || !/^\d{9,13}$/.test(meterNumber)) {
-        Alert.alert('Invalid meter number', 'Please enter a valid Zesa meter number with 9 to 13 digits');
-        return;
-      }
-    } else {
-    if (!phoneNumber) {
-      Alert.alert('This field is required', 'Please enter phone number');
-      return;
-    }
-  }
-
-    if (!amount) {
-      Alert.alert('This field is required', 'Please enter amount');
-      return;
-    }
-
-    if (isNaN(amount) || amount % 10 !== 0) {
-      Alert.alert('Invalid amount', 'Amount must be a multiple of 10');
-      return;
-    }
-      // Construct the message
-      let message;
-      if (showZesaForm) {
-        message = `SEND ${amount} TO ${meterNumber}`;
-      } else {
-        message = `SEND ${amount} TO ${phoneNumber}`;
-      }
-
-      // Generate the SMS URL
-      const smsUrl = `sms:45776?body=${encodeURIComponent(message)}`;
-
-      // Open the SMS URL
-      Linking.openURL(smsUrl);
-    };
 
   const handleBuyAirtime = () => {
     setShowZesaForm(false);
@@ -63,50 +13,6 @@ export default function ToDoScreen() {
 
   const handleBuyZesa = () => {
     setShowZesaForm(true);
-  };
-
-  const renderForm = () => {
-    if (showZesaForm) {
-      return (
-        <View style={styles.inputContainer}>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Enter Zesa Meter Number" 
-            keyboardType="numeric"
-            pattern="^\d{9,13}$"
-            value={meterNumber}
-            title="Please enter a meter number with 9 to 13 digits."
-            onChangeText={handleMeterNumberChange}
-          />
-          <TextInput 
-            style={styles.input}
-            placeholder="Enter Amount"
-            keyboardType='numeric'
-            value={amount}
-            onChangeText={handleAmountChange}
-          />
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.inputContainer}>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Enter Phone Number" 
-            keyboardType="numeric"
-            value={phoneNumber}
-            onChangeText={handlePhoneNumberChange}
-          />
-          <TextInput 
-            style={styles.input}
-            placeholder="Enter Amount"
-            keyboardType='numeric'
-            value={amount}
-            onChangeText={handleAmountChange}
-          />
-        </View>
-      );
-    }
   };
 
   return (
@@ -123,13 +29,9 @@ export default function ToDoScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* form */}
-        {renderForm()}
+        {/* Render appropriate form based on showZesaForm state */}
+        {showZesaForm ? <BuyZesaForm /> : <BuyAirtimeForm />}
 
-        {/* start button */}
-        <TouchableOpacity style={styles.startButton} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>START TOP-UP</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -138,11 +40,13 @@ export default function ToDoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center', // Center vertically
+    paddingHorizontal: 20, // Add horizontal padding
+    paddingBottom: 20, // Add bottom padding
     backgroundColor: '#fff',
   },
   content: {
-    alignItems: 'center',
-    paddingTop: 50,
+    alignItems: 'center', // Center horizontally
   },
   heading: {
     fontSize: 30,
@@ -158,25 +62,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 10,
   },
+
+
   buttonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  inputContainer: {
-    marginTop: 20,
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: 200,
-  },
-  startButton: {
-    backgroundColor: '#FF7400',
-    borderRadius: 20,
-    padding: 10,
-    marginVertical: 20,
-  },
 });
+
