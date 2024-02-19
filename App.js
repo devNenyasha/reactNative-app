@@ -42,15 +42,20 @@ export default function ToDoScreen() {
       Alert.alert('Invalid amount', 'Amount must be a multiple of 10');
       return;
     }
-    // Construct the message
-    const message = `SEND ${amount} TO  ${phoneNumber}`;
+      // Construct the message
+      let message;
+      if (showZesaForm) {
+        message = `SEND ${amount} TO ${meterNumber}`;
+      } else {
+        message = `SEND ${amount} TO ${phoneNumber}`;
+      }
 
-    // Generate the SMS URL
-    const smsUrl = `sms:45776?body=${encodeURIComponent(message)}`;
+      // Generate the SMS URL
+      const smsUrl = `sms:45776?body=${encodeURIComponent(message)}`;
 
-    // Open the SMS URL
-    Linking.openURL(smsUrl);
-  };
+      // Open the SMS URL
+      Linking.openURL(smsUrl);
+    };
 
   const handleBuyAirtime = () => {
     setShowZesaForm(false);
