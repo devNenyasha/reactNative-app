@@ -30,7 +30,7 @@ const BuyZesaForm = () => {
         }
 
         // Construct the message
-        const message = `SEND ${amount} TO  ${meterNumber}`;
+        const message = `JUSA ${amount} ZESA for  ${meterNumber}`;
 
         // Generate the SMS URL
         const smsUrl = `sms:45776?body=${encodeURIComponent(message)}`;
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         marginVertical: 20,
+        alignItems: 'center',
     },
     buttonText: {
         color: 'white',
